@@ -1,38 +1,33 @@
-import math
+import numpy as np
 import random
 
-#test data points (true y values)
-x = [0,1,2,3,4,5]
-yt = [1,3,5,7,9,11]
+d = int(input("Enter a number of data points: "))
+p = 2
 
-#predicted y value
-yp = [0,0,0,0,0,0]
+np.random.seed(314159)
+x = np.arange(d)
+yt = 1 + 2*x + np.random.randn(len(x))
 
 #initialize parameters
-theta = [2,3]
+theta = np.array([4,5])
 
 #initialize meta-parameters
 a = 0.2
 c = 0.2
 A = 1
-alpha = 1
-gamma = 1.5
+alpha = 0.602
+gamma = 0.101
 
 #function(for now just a linear function)
-def feval(x_axis,_theta_):
-    for i in range(len(x)):
-        y_axis = _theta_[0] + _theta_[1]*i
-        yp[i] = y_axis
+def feval(_theta_):
+    return _theta_[0] + _theta_[1]*x
         
 #loss function
 def loss(_theta_):
-    feval(x,_theta_)
-    for i in range(len(x)):
-        cost = 0
-        count = 0
-        cost += math.sqrt((yp[i] - yt[i])**2)
-        count += 1
-    return cost/count
+    yp = feval(_theta_)
+    cost = ((yt - yp)**2)/(2*d)
+    return np.sum(cost)/d
+print(loss(theta))
 
 #SPSA algorithm
 n = int(input("How many iterations do you want to perform?"))
@@ -40,28 +35,12 @@ n = int(input("How many iterations do you want to perform?"))
 for k in range(n):
     ak = a/(A+k+1)**alpha
     ck = c/(k+1)**gamma
-    #randomly generate components of delta vector
-    delta = [0,0]
-    for i in range(len(delta)):
-        randint = random.randint(-1,1)
-        while randint == 0:
-            randint = random.randint(-1,1)    
-        delta[i] = randint
-    #gradient estimation
-    thetaplus = [0,0]
-    thetaminus = [0,0]
-    for i in range(len(delta)):
-        thetaplus[i] = theta[i] + ck*delta[i]
-        thetaminus[i] = theta[i] - ck*delta[i]
+    delta = np.ones(p) - 2*(np.random.randint(1,3,p) -1)
+    thetaplus = theta + ck*delta
+    thetaminus = theta - ck*delta
     yplus = loss(thetaplus)
     yminus = loss(thetaminus)
-    ghat = [0,0]
-    for i in range(len(ghat)):
-        ghat[i] = (yplus - yminus)/(2*ck*delta[i])
-    #updating theta estimate
-    for i in range(len(theta)):
-        theta[i] = theta[i] - ak*ghat[i]
-    
-    print("theta:", theta,'"correct" theta: [1,2]', "ak:", ak,"ck:",ck)
-    
+    ghat = (yplus - yminus)/(2*ck*delta)
+    theta = theta - ak*ghat
+    print(theta)
     
