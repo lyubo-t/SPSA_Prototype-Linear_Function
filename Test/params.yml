@@ -1,0 +1,12 @@
+metaparams:
+  A: 1
+  a: 0.2
+  alpha: 0.602
+  c: 0.2
+  gamma: 0.101
+  k: 3
+params:
+  parameter 1: 0.0
+  parameter 2: 0.0
+  parameter 3: 0.0
+  parameter 4: 0.0

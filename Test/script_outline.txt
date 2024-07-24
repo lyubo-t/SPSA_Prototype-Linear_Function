@@ -1,0 +1,25 @@
+main folder: "c48.spsa...."
+
+Script steps:
+ -go into RC folder, read parameters file, make parameters array
+ -first half of SPSA:
+ 	-calculate ak and ck
+ 	-make delta vector
+ 	-perturb parameters 
+ -go back to main folder, execute GEOS twice with theta_plus, theta_minus
+ -go into scratch folder, read GEOS output: "experiment name.datetime.nc4"
+ -read satellite data(same datetime) from MODIS
+ -remap satellite data to same size as GEOS output
+ -calculate cost with available data(don't calculate cost with blank data of satellite)
+ -second half of SPSA:
+ 	-calculate gradient
+ 	-update parameters
+ 	-save new parameters to parameters file
+ 	
+
+----------------
+to be done:
+ -normalize parameters 
+ -choose meta-parameters
+ -normalize either both [satellite data and geos output] or [cost function] 
+
